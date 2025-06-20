@@ -50,6 +50,9 @@ usermod -aG Florian
 
 #### Q.2.3.3 Ajouter un nouveau disque de 8,00 Gio au serveur et réparer le volume RAID
 > Après ajout du disque on crée une nouvelle partition avec la commande ``fdisk /dev/sdb``
+
+
+> ```
 > n => pour la nouvelle partition
 > p => partition primaire
 > 1 => pour une partition
@@ -57,7 +60,11 @@ usermod -aG Florian
 > taille => +4G = 4gio
 > t => on change le type de la partition en **fd** qui correspond au linux RAID autodetect comme celui déja présent.
 > w => pour enregistrer
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/Ajout_partition.png)
+
+
 **NB: Modification de la taille de la partition pour 4go pour permettre le nouveau volume logique dans la question suivante**
 
 
