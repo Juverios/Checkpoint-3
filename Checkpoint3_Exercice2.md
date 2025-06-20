@@ -63,15 +63,26 @@ usermod -aG Florian
 
 > On ajoute ensuite cette partition RAID au RAID existant :
 > On vérifie le volume RAID déja présent avec ``cat /proc/mdstat``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/Vérification_Raid.png)
+
+
+
 > Après vérification on ajoute le volume nouvellement crée a celui du RAID existant avec la commande ``mdadm --add /dev/md0 /dev/sdb1``
 > ![](/Ressources/Checkpoint3_Exercice2/RaidToRaid.png)
+
+
 > On vérifie si le RAID est bien actif avec nos deux disque via la commande ``cat /proc/mdstat``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/RaidOn.png)
 
 
 #### Q.2.3.4 Ajouter un nouveau volume logique LVM de 2 Gio qui servira à héberger des sauvegardes. Ce volume doit être monté automatiquement à chaque démarrage dans l'emplacement par défaut : /var/lib/bareos/storage.
 > Création du volume logique LVM de 2gio
+
+
 > ```
 > fdisk /dev/sdb
 > n => pour la nouvelle partition
@@ -85,20 +96,42 @@ usermod -aG Florian
 
 
 > Création du volume physique LVM avec ``pvcreate /dev/sdb2``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/LVM_Create.png)
+
+
 > On repère le volume déja existant avec la commande ``vgs`` puis on ajoute notre nouveau volume a ce groupe de volumes avec la commande ``vgextend cp3-vg /dev/sdb2``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/Group_Volume.png)
+
+
 > On crée le volume logique de 2Gio => ``lvcreate -L 2G -n bareos cp3-vg``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/Volume_Bareos.png)
+
+
 > On formate en ext4 pour le montage avec ``mkfs.ext4 /dev/cp3-vg/bareos``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/Formatage_ext4.png)
+
+
 > On crée le point de mountage avec ``mkdir -p /var/lib/bareos/storage``. Puis on effectue le montage automatique dans le fichier **/etc/fstab** 
 ``nano /etc/fstab``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/Modification_fstab.png)
 
 
 #### Q.2.3.5 Combien d'espace disponible reste-t-il dans le groupe de volume ?
+
+
 > On vérifie combien d'espace disponible il reste dans le groupe de volume avec la commande ``vgs``
+
+
 > ![](/Ressources/Checkpoint3_Exercice2/Volume_restant.png)
 
 ------
@@ -108,7 +141,11 @@ usermod -aG Florian
 
 #### Q.2.4.1 Expliquer succinctement les rôles respectifs des 3 composants bareos installés sur la VM.
 > ``Bareos-dir`` : C'est le composant qui lis les fichiers de configuration pour les sauvegardes, il est lié aux deux autres composants. C'est lui qui contrôle le système bareos
+
+
 > ``Bareos-sd`` : Il s'occupe du stockage réel des données de sauvegardes qu'il reçoit via le composant **bareos-fd**, il gère également le volume de stockage défini précédemment dans la configuration comme précédemment avec ``/var/lib/bareos/cp3-vg``
+
+
 > ``Bareos-fd`` : Il correspond à l'agent bareos déployé sur chaque machine nécéssitant une sauvegarde. Il est la source des fichiers à sauvegarder.
 
 
@@ -152,8 +189,11 @@ usermod -aG Florian
 
 > Notre machine est sur le réseau 192.168.1.0/24, Pour rajouter ces règles on édite le fichier **/etc/nftables.conf** :
 > ![](/Ressources/Checkpoint3_Exercice2/Edit_nftables.conf.png)
-> 
+
+
 > On active nftables avec ``sudo systemctl enable nftables``, on le démarre avec ``sudo systemctl start nftables`` puis on recharge la nouvelle configuration avec ``systemctl reload nftables`` 
+
+
 > On peut voir que les règles sont bien actives :
 > ![](/Ressources/Checkpoint3_Exercice2/Règles_Bareos.png)
 
