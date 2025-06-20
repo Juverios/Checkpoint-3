@@ -3,7 +3,7 @@
 
 #### Q.2.1.1 Sur le serveur, créer un compte pour ton usage personnel.
 > Je suis connecter en Root, je crée mon compte à usage personnel avec la commande ``useradd Florian``
-> ![](/Ressources/Checkpoint3_Exercice2/Create_User.png)
+> ![](Ressources/Checkpoint3_Exercice2/Create_User.png)
 
 
 #### Q.2.1.2 Quelles préconisations proposes-tu concernant ce compte ?
@@ -25,14 +25,14 @@ usermod -aG Florian
 
 #### Q.2.2.1 Désactiver complètement l'accès à distance de l'utilisateur root.
 > On vérifie la présence d'un fichier de configuration :
-> ![](/Ressources/Checkpoint3_Exercice2/Local_conf_modif.png)
+> ![](Ressources/Checkpoint3_Exercice2/Local_conf_modif.png)
 
 > On ouvre le fichier de configuration **local.conf** avec la commande ``nano /etc/ssh/sshd_config.d/local.conf`` puis on modifier la ligne ``PermitRootLogin yes`` par ``PermitRootLogin no`` 
-> ![](/Ressources/Checkpoint3_Exercice2/Local_conf_modif.png)
+> ![](Ressources/Checkpoint3_Exercice2/Local_conf_modif.png)
 
 #### Q.2.2.2 Autoriser l'accès à distance à ton compte personnel uniquement.
 > On ajoute la ligne ``AllowUsers Florian``
-> ![](/Ressources/Checkpoint3_Exercice2/AllowUsers.png)
+> ![](Ressources/Checkpoint3_Exercice2/AllowUsers.png)
 
 #### Q.2.2.3 Mettre en place une authentification par clé valide et désactiver l'authentification par mot de passe
 
@@ -42,11 +42,11 @@ usermod -aG Florian
 
 #### Q.2.3.1 Quels sont les systèmes de fichiers actuellement montés ?
 > Pour savoir quel systèmes de fichiers sont actuellement montés on utilise la commande ``df -T``, on peut voir que le serveur dispose de système de fichier temporaire (tmpfs), ext4 et ext2
-> ![](/Ressources/Checkpoint3_Exercice2/Systeme_fichier.png)
+> ![](Ressources/Checkpoint3_Exercice2/Systeme_fichier.png)
 
 #### Q.2.3.2 Quel type de système de stockage ils utilisent ?
 > Pour voir quel type de système de stockage ils utilisent on se sert de la commande ``lsblk``, on peut alors voir du RAID Linux et du LVM :
-> ![](/Ressources/Checkpoint3_Exercice2/Systeme_stockage.png)
+> ![](Ressources/Checkpoint3_Exercice2/Systeme_stockage.png)
 
 #### Q.2.3.3 Ajouter un nouveau disque de 8,00 Gio au serveur et réparer le volume RAID
 > Après ajout du disque on crée une nouvelle partition avec la commande ``fdisk /dev/sdb``
@@ -62,7 +62,7 @@ usermod -aG Florian
 > w => pour enregistrer
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/Ajout_partition.png)
+> ![](Ressources/Checkpoint3_Exercice2/Ajout_partition.png)
 
 
 **NB: Modification de la taille de la partition pour 4go pour permettre le nouveau volume logique dans la question suivante**
@@ -72,18 +72,18 @@ usermod -aG Florian
 > On vérifie le volume RAID déja présent avec ``cat /proc/mdstat``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/Vérification_Raid.png)
+> ![](Ressources/Checkpoint3_Exercice2/Vérification_Raid.png)
 
 
 
 > Après vérification on ajoute le volume nouvellement crée a celui du RAID existant avec la commande ``mdadm --add /dev/md0 /dev/sdb1``
-> ![](/Ressources/Checkpoint3_Exercice2/RaidToRaid.png)
+> ![](Ressources/Checkpoint3_Exercice2/RaidToRaid.png)
 
 
 > On vérifie si le RAID est bien actif avec nos deux disque via la commande ``cat /proc/mdstat``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/RaidOn.png)
+> ![](Ressources/Checkpoint3_Exercice2/RaidOn.png)
 
 
 #### Q.2.3.4 Ajouter un nouveau volume logique LVM de 2 Gio qui servira à héberger des sauvegardes. Ce volume doit être monté automatiquement à chaque démarrage dans l'emplacement par défaut : /var/lib/bareos/storage.
@@ -105,32 +105,32 @@ usermod -aG Florian
 > Création du volume physique LVM avec ``pvcreate /dev/sdb2``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/LVM_Create.png)
+> ![](Ressources/Checkpoint3_Exercice2/LVM_Create.png)
 
 
 > On repère le volume déja existant avec la commande ``vgs`` puis on ajoute notre nouveau volume a ce groupe de volumes avec la commande ``vgextend cp3-vg /dev/sdb2``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/Group_Volume.png)
+> ![](Ressources/Checkpoint3_Exercice2/Group_Volume.png)
 
 
 > On crée le volume logique de 2Gio => ``lvcreate -L 2G -n bareos cp3-vg``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/Volume_Bareos.png)
+> ![](Ressources/Checkpoint3_Exercice2/Volume_Bareos.png)
 
 
 > On formate en ext4 pour le montage avec ``mkfs.ext4 /dev/cp3-vg/bareos``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/Formatage_ext4.png)
+> ![](Ressources/Checkpoint3_Exercice2/Formatage_ext4.png)
 
 
 > On crée le point de mountage avec ``mkdir -p /var/lib/bareos/storage``. Puis on effectue le montage automatique dans le fichier **/etc/fstab** 
 ``nano /etc/fstab``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/Modification_fstab.png)
+> ![](Ressources/Checkpoint3_Exercice2/Modification_fstab.png)
 
 
 #### Q.2.3.5 Combien d'espace disponible reste-t-il dans le groupe de volume ?
@@ -139,7 +139,7 @@ usermod -aG Florian
 > On vérifie combien d'espace disponible il reste dans le groupe de volume avec la commande ``vgs``
 
 
-> ![](/Ressources/Checkpoint3_Exercice2/Volume_restant.png)
+> ![](Ressources/Checkpoint3_Exercice2/Volume_restant.png)
 
 ------
 
@@ -164,7 +164,7 @@ usermod -aG Florian
 #### Q.2.5.1 Quelles sont actuellement les règles appliquées sur Netfilter ?
 
 > Pour voir les règles appliquées on utilise la commande ``nft list ruleset``
-> ![](/Ressources/Checkpoint3_Exercice2/Netfilter_list.png)
+> ![](Ressources/Checkpoint3_Exercice2/Netfilter_list.png)
 > On peut donc voir différentes règles :
 > - ``type filter hook input priority filter; policy drop`` = **Tout est bloqué sauf ce qui est explicitement autorisé.**
 > - ``ct state established,related accept`` = **Autorise les connexions déja établies (Requête TCP)**
@@ -195,14 +195,14 @@ usermod -aG Florian
 #### Q.2.5.4 Sur nftables, ajouter les règles nécessaires pour autoriser bareos à communiquer avec les clients bareos potentiellement présents sur l'ensemble des machines du réseau local sur lequel se trouve le serveur.
 
 > Notre machine est sur le réseau 192.168.1.0/24, Pour rajouter ces règles on édite le fichier **/etc/nftables.conf** :
-> ![](/Ressources/Checkpoint3_Exercice2/Edit_nftables.conf.png)
+> ![](Ressources/Checkpoint3_Exercice2/Edit_nftables.conf.png)
 
 
 > On active nftables avec ``sudo systemctl enable nftables``, on le démarre avec ``sudo systemctl start nftables`` puis on recharge la nouvelle configuration avec ``systemctl reload nftables`` 
 
 
 > On peut voir que les règles sont bien actives :
-> ![](/Ressources/Checkpoint3_Exercice2/Règles_Bareos.png)
+> ![](Ressources/Checkpoint3_Exercice2/Règles_Bareos.png)
 
 ------
 
